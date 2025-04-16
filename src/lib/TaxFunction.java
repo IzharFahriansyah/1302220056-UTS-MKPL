@@ -28,20 +28,24 @@ public class TaxFunction {
     	return nonTaxableIncome;
 	}
 
+	// Meambahkan helper method untuk validasi input
+	private static void validateInputs(int numberOfMonthWorking, int numberOfChildren) {
+    	if (numberOfMonthWorking > 12) {
+        	throw new IllegalArgumentException("Number of months worked cannot exceed 12.");
+    	}
+    	if (numberOfChildren < 0) {
+        	throw new IllegalArgumentException("Number of children cannot be negative.");
+    	}
+	}
 
 	public static int calculateTax(int monthlySalary, int otherMonthlyIncome, int numberOfMonthWorking, int deductible, boolean isMarried, int numberOfChildren) {
-    	int tax = 0;
-
-    	if (numberOfMonthWorking > 12) {
-        	System.err.println("More than 12 month working per year");
-    	}
+    	validateInputs(numberOfMonthWorking, numberOfChildren);
 
     	int nonTaxableIncome = calculateNonTaxableIncome(isMarried, numberOfChildren);
     	int taxableIncome = ((monthlySalary + otherMonthlyIncome) * numberOfMonthWorking) - deductible - nonTaxableIncome;
 
-    	tax = (int) Math.round(TAX_RATE * taxableIncome);
+    	int tax = (int) Math.round(TAX_RATE * taxableIncome);
 
     	return Math.max(tax, 0); // Pastikan pajak tidak negatif
 	}
-	
 }
