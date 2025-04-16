@@ -80,14 +80,14 @@ public class TaxFunction {
     	}
 	}
 
-	public static int calculateTax(int monthlySalary, int otherMonthlyIncome, int numberOfMonthWorking, int deductible, boolean isMarried, int numberOfChildren) {
-    	validateInputs(numberOfMonthWorking, numberOfChildren);
+	public static int calculateTax(TaxData taxData) {
+    	validateInputs(taxData.getNumberOfMonthWorking(), taxData.getNumberOfChildren());
 
-    	int nonTaxableIncome = calculateNonTaxableIncome(isMarried, numberOfChildren);
-    	int taxableIncome = ((monthlySalary + otherMonthlyIncome) * numberOfMonthWorking) - deductible - nonTaxableIncome;
+    	int nonTaxableIncome = calculateNonTaxableIncome(taxData.isMarried(), taxData.getNumberOfChildren());
+    	int taxableIncome = ((taxData.getMonthlySalary() + taxData.getOtherMonthlyIncome()) * taxData.getNumberOfMonthWorking()) - taxData.getDeductible() - nonTaxableIncome;
 
     	int tax = (int) Math.round(TAX_RATE * taxableIncome);
 
-    	return Math.max(tax, 0); // Pastikan pajak tidak negatif
-	}
+   		return Math.max(tax, 0); // Pastikan pajak tidak negatif
+}
 }
