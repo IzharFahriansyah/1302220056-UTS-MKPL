@@ -30,6 +30,11 @@ public class Employee {
 
 	private List<String> childNames;
 	private List<String> childIdNumbers;
+
+	private static final int BASE_SALARY_GRADE_1 = 3000000;
+	private static final int BASE_SALARY_GRADE_2 = 5000000;
+	private static final int BASE_SALARY_GRADE_3 = 7000000;
+	private static final double FOREIGNER_SALARY_MULTIPLIER = 1.5;
 	
 	public Employee(String employeeId, String firstName, String lastName, String idNumber, String address, int yearJoined, int monthJoined, int dayJoined, boolean isForeigner, boolean gender) {
 		this.employeeId = employeeId;
@@ -52,23 +57,18 @@ public class Employee {
 	 * Jika pegawai adalah warga negara asing gaji bulanan diperbesar sebanyak 50%
 	 */
 	
+	private int calculateBaseSalary(int grade) {
+    switch (grade) {
+        case 1: return BASE_SALARY_GRADE_1;
+        case 2: return BASE_SALARY_GRADE_2;
+        case 3: return BASE_SALARY_GRADE_3;
+        default: throw new IllegalArgumentException("Invalid grade");
+    	}
+	}
+
 	public void setMonthlySalary(int grade) {	
-		if (grade == 1) {
-			monthlySalary = 3000000;
-			if (isForeigner) {
-				monthlySalary = (int) (3000000 * 1.5);
-			}
-		}else if (grade == 2) {
-			monthlySalary = 5000000;
-			if (isForeigner) {
-				monthlySalary = (int) (3000000 * 1.5);
-			}
-		}else if (grade == 3) {
-			monthlySalary = 7000000;
-			if (isForeigner) {
-				monthlySalary = (int) (3000000 * 1.5);
-			}
-		}
+		int baseSalary = calculateBaseSalary(grade);
+    monthlySalary = isForeigner ? (int) (baseSalary * FOREIGNER_SALARY_MULTIPLIER) : baseSalary;
 	}
 	
 	public void setAnnualDeductible(int deductible) {	
