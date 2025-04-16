@@ -18,30 +18,30 @@ public class TaxFunction {
 	private static final int CHILD_ALLOWANCE = 1500000;
 	private static final double TAX_RATE = 0.05;
 	
+	// Menambahkan helper method untuk menghitung penghasilan tidak kena pajak
+	private static int calculateNonTaxableIncome(boolean isMarried, int numberOfChildren) {
+    	int nonTaxableIncome = BASIC_NON_TAXABLE_INCOME;
+    	if (isMarried) {
+        	nonTaxableIncome += MARRIAGE_ALLOWANCE;
+    	}
+    	nonTaxableIncome += Math.min(numberOfChildren, 3) * CHILD_ALLOWANCE;
+    	return nonTaxableIncome;
+	}
+
+
 	public static int calculateTax(int monthlySalary, int otherMonthlyIncome, int numberOfMonthWorking, int deductible, boolean isMarried, int numberOfChildren) {
-		
-		int tax = 0;
-		
-		if (numberOfMonthWorking > 12) {
-			System.err.println("More than 12 month working per year");
-		}
-		
-		if (numberOfChildren > 3) {
-			numberOfChildren = 3;
-		}
-		
-		if (isMarried) {
-    		tax = (int) Math.round(TAX_RATE * (((monthlySalary + otherMonthlyIncome) * numberOfMonthWorking) - deductible - (BASIC_NON_TAXABLE_INCOME + MARRIAGE_ALLOWANCE + (numberOfChildren * CHILD_ALLOWANCE))));
-		} else {
-    		tax = (int) Math.round(TAX_RATE * (((monthlySalary + otherMonthlyIncome) * numberOfMonthWorking) - deductible - BASIC_NON_TAXABLE_INCOME));
-		}
-		
-		if (tax < 0) {
-			return 0;
-		}else {
-			return tax;
-		}
-			 
+    	int tax = 0;
+
+    	if (numberOfMonthWorking > 12) {
+        	System.err.println("More than 12 month working per year");
+    	}
+
+    	int nonTaxableIncome = calculateNonTaxableIncome(isMarried, numberOfChildren);
+    	int taxableIncome = ((monthlySalary + otherMonthlyIncome) * numberOfMonthWorking) - deductible - nonTaxableIncome;
+
+    	tax = (int) Math.round(TAX_RATE * taxableIncome);
+
+    	return Math.max(tax, 0); // Pastikan pajak tidak negatif
 	}
 	
 }
